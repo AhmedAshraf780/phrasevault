@@ -15,24 +15,42 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phrases: [
-    {
-      text: String,
-      meaning: String,
-    },
-  ],
-  phrasalVerbs: [
-    {
-      verb: String,
-      meaning: String,
-    },
-  ],
-  idioms: [
-    {
-      idiom: String,
-      meaning: String,
-    },
-  ],
+  phrases: {
+    type: [
+      {
+        text: String,
+        meaning: String,
+      },
+    ],
+    default: [
+      { text: "Break a leg", meaning: "Good luck" },
+      { text: "Under the weather", meaning: "Feeling unwell" },
+    ],
+  },
+  phrasalVerbs: {
+    type: [
+      {
+        text: String,
+        meaning: String,
+      },
+    ],
+    default: [
+      { text: "Look up", meaning: "Search for information" },
+      { text: "Run out of", meaning: "Have no more of something" },
+    ],
+  },
+  idioms: {
+    type: [
+      {
+        text: String,
+        meaning: String,
+      },
+    ],
+    default: [
+      { text: "Hit the sack", meaning: "Go to bed" },
+      { text: "Piece of cake", meaning: "Very easy" },
+    ],
+  },
 });
 
 const User = mongoose.model("User", userSchema);

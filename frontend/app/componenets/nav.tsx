@@ -1,13 +1,18 @@
 "use client"; // Needed if using Next.js App Router
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userservice } from "../services/userservice";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const [logged, setLogged] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setLogged(userservice.tokenExists());
+  }, []);
 
   const handleSignOut = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -83,7 +88,7 @@ export default function Nav() {
                 )}
               </svg>
             </button>
-            {userservice.isLogged ? (
+            {logged ? (
               // Sign Out button
               <button
                 onClick={handleSignOut}

@@ -10,6 +10,30 @@ const config = require("../config/env");
 
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
+  }
+
+  const token = authHeader.slice(7);
+
+  try {
+    const decoded = jwt.decode(token, config.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+    return res.status(200).json({
+      name: user.name,
+      email: user.email,
+      token,
+    });
+  } catch (err) {
+    console.log("err", err);
+    return res.status(500).json({
+      success: false,
+      message: "Server internal error",
+    });
+  }
+});
 // Signup
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
@@ -109,4 +133,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-module.exports.userRoutes = router;
+module.exports.userRoute = router;

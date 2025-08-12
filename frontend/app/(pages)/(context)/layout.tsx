@@ -1,6 +1,8 @@
 import Nav from "../../componenets/nav";
 
-export default function Layout({ children }) {
+export default function Layout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
       <Nav />

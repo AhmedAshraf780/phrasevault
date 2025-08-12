@@ -2,19 +2,22 @@
 
 import { useEffect, useState } from "react";
 import Nav from "./componenets/nav";
-import { userservice } from "./services/userservice";
 import { useRouter } from "next/navigation";
+import { userservice } from "./services/userservice";
 
 export default function Home() {
   const router = useRouter();
   const [username, setUsername] = useState("");
 
+  const getData = async () => {
+    const userData = await userservice.getUserData();
+    setUsername(userData?.name || "Friend");
+  };
+
   useEffect(() => {
-    userservice.loadUserFromStorage();
-    if (!userservice.isLogged) {
+    getData();
+    if (!localStorage.getItem("token")) {
       router.push("/signup");
-    } else {
-      setUsername(userservice.userName || "Friend");
     }
   }, [router]);
 
