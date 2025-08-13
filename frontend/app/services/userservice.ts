@@ -3,7 +3,7 @@ type userdata = {
   email: string;
 };
 
-const BASE_URL = "http://192.168.1.8:3002";
+const BASE_URL = "/api";
 
 export const userservice = {
   tokenExists() {
