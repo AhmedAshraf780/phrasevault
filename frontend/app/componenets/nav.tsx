@@ -50,7 +50,7 @@ export default function Nav() {
                 Phrases
               </Link>
               <Link
-                href="/phrasal-verbs"
+                href="/phrasalverbs"
                 className="text-gray-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/10"
               >
                 Phrasal Verbs
