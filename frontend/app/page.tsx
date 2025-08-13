@@ -40,6 +40,29 @@ export default function Home() {
           </p>
         </div>
       </section>
+      <section className="py-16 bg-gray-900 px-6 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Your English, Your Style ✨
+          </h2>
+          <p className="text-gray-300 text-lg leading-relaxed">
+            You don’t need to know every English word to speak with confidence.
+            Instead, focus on the words, idioms, and phrasal verbs that feel
+            natural to you. Collect them here, review them often, and make them
+            part of your everyday conversations.
+          </p>
+          <p className="text-gray-400 mt-4">
+            Over time, your personal collection becomes your unique voice —
+            authentic, expressive, and entirely yours.
+          </p>
+          <button
+            onClick={() => router.push("/phrases")}
+            className="mt-8 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium shadow-lg transition"
+          >
+            Start Building Your Collection
+          </button>
+        </div>
+      </section>
     </>
   );
 }

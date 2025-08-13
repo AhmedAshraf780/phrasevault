@@ -2,15 +2,10 @@ type userdata = {
   name: string;
   email: string;
 };
-export const userservice = {
-  // userId: "",
-  // userName: "",
-  // isLogged: false,
-  // token: "",
-  // phrases: [] as { phrase: string; description: string }[],
-  // phrasal_verbs: [] as { phrase: string; description: string }[],
-  // idioms: [] as { phrase: string; description: string }[],
 
+const BASE_URL = "http://192.168.1.8:3002";
+
+export const userservice = {
   tokenExists() {
     if (typeof window !== "undefined") {
       return !!localStorage.getItem("token");
@@ -21,7 +16,7 @@ export const userservice = {
   async getUserData() {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch("http://localhost:3002/", {
+      const res = await fetch(`${BASE_URL}/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +25,6 @@ export const userservice = {
       });
 
       const data = await res.json();
-
       return { name: data.name, email: data.email };
     } catch (err) {
       console.log("Get User Request Failed", err);
@@ -39,26 +33,17 @@ export const userservice = {
 
   async signUpUser(name: string, email: string, password: string) {
     try {
-      const res = await fetch("http://localhost:3002/signup", {
+      const res = await fetch(`${BASE_URL}/signup`, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
-
       if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
-
-        // this.isLogged = true;
-        // this.userId = data.userId;
-        // this.token = data.token;
-        // this.userName = data.userName;
       }
-
       return data;
     } catch (err) {
       console.log("Signup Request Failed", err);
@@ -68,21 +53,14 @@ export const userservice = {
 
   async logInUser(email: string, password: string) {
     try {
-      const res = await fetch("http://localhost:3002/login", {
+      const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
       if (data.success) {
-        // this.token = data.token;
-        // this.userId = data.userId;
-        // this.userName = data.userName;
-        // this.isLogged = true;
-
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
       }
@@ -96,31 +74,21 @@ export const userservice = {
   loadUserFromStorage() {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-
     if (token && userId) {
-      // this.isLogged = true;
-      // this.userId = userId;
-      // this.token = token;
     }
   },
 
-  /** ====== Local State Methods ====== **/
-
-  /**
-   *
-   *  Phrases Methods
-   */
+  /** Phrases **/
   async getPhrases() {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch("http://localhost:3002/phrases", {
+      const res = await fetch(`${BASE_URL}/phrases`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
       const data = await res.json();
       return data.phrases;
     } catch (err) {
@@ -132,18 +100,14 @@ export const userservice = {
   async addPhrase(text: string, meaning: string) {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3002/phrases", {
+      await fetch(`${BASE_URL}/phrases`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          text,
-          meaning,
-        }),
+        body: JSON.stringify({ text, meaning }),
       });
-      const data = await res.json();
     } catch (err) {
       console.log(err);
     }
@@ -152,40 +116,31 @@ export const userservice = {
   async updatePhrases(phrases: { text: string; meaning: string }[]) {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch("http://localhost:3002/phrases", {
+      await fetch(`${BASE_URL}/phrases`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          phrases,
-        }),
+        body: JSON.stringify({ phrases }),
       });
-
-      const data = await res.json();
     } catch (err) {
       console.log(err);
     }
   },
 
-  /**
-   *    Phrasal Verbs Methods
-   */
+  /** Phrasal Verbs **/
   async getPhrasals() {
     try {
       const token = localStorage.getItem("token") || "";
-
-      const res = await fetch("http://localhost:3002/phrasals", {
+      const res = await fetch(`${BASE_URL}/phrasals`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
       console.log(err);
     }
@@ -194,17 +149,13 @@ export const userservice = {
   async addPhrasal(text: string, meaning: string) {
     try {
       const token = localStorage.getItem("token") || "";
-
-      const res = await fetch("http://localhost:3002/phrasals", {
+      await fetch(`${BASE_URL}/phrasals`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          text,
-          meaning,
-        }),
+        body: JSON.stringify({ text, meaning }),
       });
     } catch (err) {
       console.log(err);
@@ -214,40 +165,31 @@ export const userservice = {
   async updatePhrasals(phrasals: { text: string; meaning: string }[]) {
     try {
       const token = localStorage.getItem("token") || "";
-
-      const res = await fetch("http://localhost:3002/phrasals", {
+      await fetch(`${BASE_URL}/phrasals`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          phrasals,
-        }),
+        body: JSON.stringify({ phrasals }),
       });
-      const data = await res.json(); // we do nothing with data so far
     } catch (err) {
       console.log(err);
     }
   },
 
-  /**
-   *    Idioms Methods
-   */
+  /** Idioms **/
   async getIdioms() {
     try {
       const token = localStorage.getItem("token") || "";
-
-      const res = await fetch("http://localhost:3002/idioms", {
+      const res = await fetch(`${BASE_URL}/idioms`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
       console.log(err);
     }
@@ -256,17 +198,13 @@ export const userservice = {
   async addIdiom(text: string, meaning: string) {
     try {
       const token = localStorage.getItem("token") || "";
-
-      const res = await fetch("http://localhost:3002/idioms", {
+      await fetch(`${BASE_URL}/idioms`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          text,
-          meaning,
-        }),
+        body: JSON.stringify({ text, meaning }),
       });
     } catch (err) {
       console.log(err);
@@ -276,18 +214,14 @@ export const userservice = {
   async updateIdioms(idioms: { text: string; meaning: string }[]) {
     try {
       const token = localStorage.getItem("token") || "";
-
-      const res = await fetch("http://localhost:3002/idioms", {
+      await fetch(`${BASE_URL}/idioms`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          idioms,
-        }),
+        body: JSON.stringify({ idioms }),
       });
-      const data = await res.json(); // we do nothing with data so far
     } catch (err) {
       console.log(err);
     }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { userservice } from "../services/userservice";
+import Image from "next/image";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,15 +26,20 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link
-              href="/"
-              className="text-2xl font-bold text-white hover:text-blue-400 transition-colors duration-200"
-            >
-              phrasevault
-            </Link>
+          <div className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/apple-touch-icon.png"
+                alt="logo"
+                width={40}
+                height={40}
+                priority
+              />
+              <span className="text-2xl font-bold text-white hover:text-blue-400 transition-colors duration-200">
+                phrasevault
+              </span>
+            </Link>{" "}
           </div>
-
           {/* Center Navigation Links */}
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">

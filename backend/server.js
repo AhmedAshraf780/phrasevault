@@ -13,12 +13,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-
 app.use("/", userRoute);
 app.use("/phrases", phrasesRoute);
 app.use("/phrasals", phrasalsRoute);
 app.use("/idioms", idiomsRoute);
 
-app.listen(config.PORT, () => {
+app.listen(config.PORT, "0.0.0.0", () => {
   console.log(`listenning on port ${config.PORT}`);
 });
