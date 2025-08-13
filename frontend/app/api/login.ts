@@ -8,6 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  alert("um here");
   if (req.method !== "POST") {
     return res
       .status(405)

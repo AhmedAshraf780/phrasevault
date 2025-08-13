@@ -53,6 +53,7 @@ export const userservice = {
 
   async logInUser(email: string, password: string) {
     try {
+      alert("um in loginuser");
       const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
