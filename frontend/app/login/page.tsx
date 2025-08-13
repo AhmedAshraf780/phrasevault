@@ -72,7 +72,7 @@ export default function LoginPage() {
         {/* Footer */}
         <p className="mt-6 text-gray-400 text-center text-sm">
           Don’t have an account?{" "}
-          <Link href="/api/signup" className="text-blue-400 hover:underline">
+          <Link href="/signup" className="text-blue-400 hover:underline">
             Sign up
           </Link>
         </p>

@@ -99,7 +99,7 @@ export default function SignupPage() {
         {/* Footer */}
         <p className="mt-6 text-gray-400 text-center text-sm">
           Already have an account?{" "}
-          <Link href="/api/login" className="text-blue-400 hover:underline">
+          <Link href="/login" className="text-blue-400 hover:underline">
             Sign in
           </Link>
         </p>
