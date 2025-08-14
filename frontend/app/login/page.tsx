@@ -1,30 +1,47 @@
 "use client";
-
+interface UserError {
+  success: boolean;
+  message: string;
+}
 import { userservice } from "../services/userservice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import type { UserResponse } from "../services/userservice";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState({ isErr: false, message: "" });
+  const [userData, setUserData] = useState<UserResponse | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      router.push("/");
-    }
+    const fetchData = async () => {
+      const existed = await userservice.isUserExisted();
+      console.log("existed", existed);
+      if (existed) {
+        router.push("/");
+      } else {
+        router.push("/login");
+      }
+    };
+    fetchData();
+    router.push("/signup");
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await userservice.logInUser(email, password);
+    const res: UserError | { success: true } = await userservice.logInUser(
+      email,
+      password
+    );
     if (!res.success) {
       return setErr({ isErr: true, message: res.message });
     }
     router.push("/");
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-4">
       <div className="bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 w-full max-w-md shadow-xl">
@@ -68,7 +85,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {err.isErr && <h1>{err.message}</h1>}
+        {err.isErr && (
+          <div className="mt-4 bg-red-500/20 border border-red-500 text-red-400 text-sm p-3 rounded-lg text-center">
+            {err.message}
+          </div>
+        )}
+
         {/* Footer */}
         <p className="mt-6 text-gray-400 text-center text-sm">
           Don’t have an account?{" "}

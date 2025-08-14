@@ -3,6 +3,10 @@ import dbConnect from "@/app/libs/connectDb";
 import User from "@/app/models/users";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import * as cookie from "cookie";
+
+import fs from "fs";
+import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,6 +26,20 @@ export default async function handler(
       .json({ success: false, message: "Fill out all fields" });
   }
 
+  if (password.length < 8) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 character",
+    });
+  }
+
+  if (!email.toLowerCase().endsWith("@gmail.com")) {
+    return res.status(400).json({
+      success: false,
+      message: "Only Gmail accounts can sign up",
+    });
+  }
+
   try {
     await dbConnect();
 
@@ -39,19 +57,38 @@ export default async function handler(
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET!,
-      { expiresIn: "7d" }
+      { expiresIn: "1d" }
+    );
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 15,
+        path: "/",
+      })
     );
 
     return res.status(201).json({
       success: true,
       message: "User created successfully",
-      token,
       userId: user._id,
       userName: user.name,
     });
   } catch (err) {
+    const logPath = path.join(process.cwd(), "app", "logs", "signup.log");
+    const logMessage = `[${new Date().toISOString()}] ${
+      err instanceof Error ? err.stack : err
+    }\n`;
+
+    fs.appendFile(logPath, logMessage, (fsErr) => {
+      if (fsErr) {
+        console.error("Failed to write to log file", fsErr);
+      }
+    });
     return res
       .status(500)
-      .json({ success: false, message: "Server internal error" });
+      .json({ success: false, message: `Server internal error` });
   }
 }

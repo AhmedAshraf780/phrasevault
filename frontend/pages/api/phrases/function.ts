@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import dbConnect from "@/app/libs/connectDb";
 import User from "@/app/models/users";
+import * as cookie from "cookie";
 
 interface DecodedToken {
   userId: string;
@@ -14,11 +15,15 @@ export default async function handler(
 ) {
   await dbConnect();
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+  const cookies = cookie.parse(req.headers.cookie || "");
+  const token = cookies.token;
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Access",
+    });
   }
-  const token = authHeader.slice(7);
 
   try {
     const decoded = jwt.verify(

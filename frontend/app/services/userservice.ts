@@ -1,26 +1,74 @@
-export const userservice = {
-  tokenExists() {
-    if (typeof window !== "undefined") {
-      return !!localStorage.getItem("token");
-    }
-    return false;
-  },
+interface UserSuccess {
+  success: true;
+  email: string;
+  name: string;
+}
 
-  async getUserData() {
+interface UserError {
+  success: false;
+  message: string;
+}
+
+export type UserResponse = UserSuccess | UserError;
+
+export const userservice = {
+  async isUserExisted() {
+    const data = await this.getUserData();
+    if (data.success) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  async loggingOut() {
     try {
-      const token = localStorage.getItem("token") || "";
-      const res = await fetch(`/api`, {
-        method: "GET",
+      const res = await fetch(`/api/logout/function`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      return {
+        success: false,
+        message: "Error in Fetching",
+      };
+    }
+  },
+  async getUserData(): Promise<UserResponse> {
+    try {
+      const res = await fetch(`/api`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
         },
       });
 
       const data = await res.json();
-      return { name: data.name, email: data.email };
+
+      if (data.success) {
+        return {
+          success: true,
+          name: data.name,
+          email: data.email,
+        };
+      }
+
+      return {
+        success: false,
+        message: data.message || "Unable to fetch user data",
+      };
     } catch (err) {
-      console.log("Get User Request Failed", err);
+      console.error("Get User Request Failed", err);
+      return {
+        success: false,
+        message: "Network or server error",
+      };
     }
   },
 
@@ -28,15 +76,16 @@ export const userservice = {
     try {
       const res = await fetch(`api/signup/function`, {
         method: "POST",
+        credentials: "include",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.userId);
-      }
+      // if (data.success) {
+      //   localStorage.setItem("token", data.token);
+      //   localStorage.setItem("userId", data.userId);
+      // }
       return data;
     } catch (err) {
       console.log("Signup Request Failed", err);
@@ -48,15 +97,16 @@ export const userservice = {
     try {
       const res = await fetch(`/api/login/function`, {
         method: "POST",
+        credentials: "include",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.userId);
-      }
+      // if (data.success) {
+      //   localStorage.setItem("token", data.token);
+      //   localStorage.setItem("userId", data.userId);
+      // }
       return data;
     } catch (err) {
       console.log("Login Request Failed", err);
@@ -64,22 +114,14 @@ export const userservice = {
     }
   },
 
-  loadUserFromStorage() {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    if (token && userId) {
-    }
-  },
-
   /** Phrases **/
   async getPhrases() {
     try {
-      const token = localStorage.getItem("token") || "";
       const res = await fetch(`/api/phrases/function`, {
         method: "GET",
+        credentials: "include",
         headers: {
           "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
       const data = await res.json();
@@ -92,12 +134,11 @@ export const userservice = {
 
   async addPhrase(text: string, meaning: string) {
     try {
-      const token = localStorage.getItem("token");
       await fetch(`/api/phrases/function`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ text, meaning }),
       });
@@ -108,12 +149,11 @@ export const userservice = {
 
   async updatePhrases(phrases: { text: string; meaning: string }[]) {
     try {
-      const token = localStorage.getItem("token") || "";
       await fetch(`/api/phrases/function`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ phrases }),
       });
@@ -125,12 +165,11 @@ export const userservice = {
   /** Phrasal Verbs **/
   async getPhrasals() {
     try {
-      const token = localStorage.getItem("token") || "";
       const res = await fetch(`/api/phrasalverbs/function`, {
         method: "GET",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
       return await res.json();
@@ -141,12 +180,11 @@ export const userservice = {
 
   async addPhrasal(text: string, meaning: string) {
     try {
-      const token = localStorage.getItem("token") || "";
       await fetch(`/api/phrasalverbs/function`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ text, meaning }),
       });
@@ -157,12 +195,11 @@ export const userservice = {
 
   async updatePhrasals(phrasals: { text: string; meaning: string }[]) {
     try {
-      const token = localStorage.getItem("token") || "";
       await fetch(`/api/phrasalverbs/function`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ phrasals }),
       });
@@ -174,12 +211,11 @@ export const userservice = {
   /** Idioms **/
   async getIdioms() {
     try {
-      const token = localStorage.getItem("token") || "";
       const res = await fetch(`/api/idioms/function`, {
         method: "GET",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
       return await res.json();
@@ -190,12 +226,11 @@ export const userservice = {
 
   async addIdiom(text: string, meaning: string) {
     try {
-      const token = localStorage.getItem("token") || "";
       await fetch(`/api/idioms/function`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ text, meaning }),
       });
@@ -206,12 +241,11 @@ export const userservice = {
 
   async updateIdioms(idioms: { text: string; meaning: string }[]) {
     try {
-      const token = localStorage.getItem("token") || "";
       await fetch(`/api/idioms/function`, {
         method: "PUT",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ idioms }),
       });

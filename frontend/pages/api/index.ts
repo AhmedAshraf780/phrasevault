@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/app/libs/connectDb";
 import User from "@/app/models/users";
 import jwt from "jsonwebtoken";
+import * as cookie from "cookie";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,12 +14,16 @@ export default async function handler(
       .json({ success: false, message: "Method not allowed" });
   }
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ success: false, message: "Unauthorized" });
-  }
+  const cookies = cookie.parse(req.headers.cookie || "");
 
-  const token = authHeader.slice(7);
+  const token = cookies.token;
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "unAuthorized Access",
+    });
+  }
 
   try {
     await dbConnect();
@@ -34,9 +39,9 @@ export default async function handler(
     }
 
     return res.status(200).json({
+      success: true,
       name: user.name,
       email: user.email,
-      token,
     });
   } catch (err) {
     return res

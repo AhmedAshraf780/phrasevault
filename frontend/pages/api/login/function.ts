@@ -3,6 +3,7 @@ import dbConnect from "@/app/libs/connectDb";
 import User from "@/app/models/users";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import * as cookie from "cookie";
 
 export default async function handler(
   req: NextApiRequest,
@@ -46,17 +47,26 @@ export default async function handler(
         expiresIn: "4d",
       }
     );
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 15,
+        path: "/",
+      })
+    );
 
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
-      token,
       userId: user._id,
       userName: user.name,
     });
   } catch (err) {
     return res
       .status(500)
-      .json({ success: false, message: "Server internal error" });
+      .json({ success: false, message: `Server internal error` });
   }
 }

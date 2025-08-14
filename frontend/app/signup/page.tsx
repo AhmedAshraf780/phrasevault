@@ -11,12 +11,20 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState({ isErr: false, message: "" });
   const router = useRouter();
+  const [userData, setUserData] = useState<any | null>(null);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      return router.push("/");
-    }
-  }, [router]);
+    const fetchData = async () => {
+      const data: any = await userservice.getUserData();
+      if (data.success) {
+        setUserData(data);
+        router.push("/");
+      } else {
+        router.push("/signup");
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +41,12 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-4">
       <div className="bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 w-full max-w-md shadow-xl">
+        {/* 🔔 Warning Banner */}
+        <div className="mb-6 bg-yellow-500/20 border border-yellow-400 text-yellow-300 p-3 rounded-lg text-sm text-center">
+          ⚠ This is a learning project — do <strong>NOT</strong> use your real
+          email or password. Your data may not be secure.
+        </div>
+
         <h1 className="text-3xl font-bold text-white text-center mb-6">
           Create Account
         </h1>
@@ -89,9 +103,8 @@ export default function SignupPage() {
           </button>
         </form>
 
-        {/* Error message */}
         {err.isErr && (
-          <div className="mt-4 text-red-400 text-sm text-center">
+          <div className="mt-4 bg-red-500/20 border border-red-500 text-red-400 text-sm p-3 rounded-lg text-center">
             {err.message}
           </div>
         )}

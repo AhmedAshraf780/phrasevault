@@ -1,24 +1,30 @@
 "use client";
 
+interface userdata {
+  email: string;
+  name: string;
+}
+
 import { useEffect, useState } from "react";
 import Nav from "./components/nav";
 import { useRouter } from "next/navigation";
-import { userservice } from "./services/userservice";
+import { UserResponse, userservice } from "./services/userservice";
 
 export default function Home() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-
-  const getData = async () => {
-    const userData = await userservice.getUserData();
-    setUsername(userData?.name || "Friend");
-  };
+  const [userData, setUserData] = useState<userdata | null>(null);
 
   useEffect(() => {
-    getData();
-    if (!localStorage.getItem("token")) {
-      router.push("/signup");
-    }
+    const fetchData = async () => {
+      const data: UserResponse = await userservice.getUserData();
+      if (!data.success) {
+        router.push("/signup");
+      } else {
+        setUserData(data);
+        router.push("/");
+      }
+    };
+    fetchData();
   }, [router]);
 
   return (
@@ -27,7 +33,7 @@ export default function Home() {
       <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-6 text-center">
         <div className="bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl p-8 max-w-2xl shadow-xl">
           <h1 className="text-4xl font-bold text-white mb-4">
-            Welcome, {username} 👋
+            Welcome, {userData?.name} 👋
           </h1>
           <p className="text-gray-300 text-lg leading-relaxed">
             PhraseVault is your personal English learning companion. Save

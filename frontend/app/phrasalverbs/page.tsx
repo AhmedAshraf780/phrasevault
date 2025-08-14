@@ -57,7 +57,7 @@ export default function PhrasalsPage() {
     <>
       <Nav />
       <PhraseList
-        title="Phrasals"
+        title="Phrasal Verbs"
         items={phrasals}
         onAdd={addPhrase}
         onEdit={editPhrase}
