@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PhraseList from "../componenets/PhraseList";
 import { userservice } from "../services/userservice";
+import Nav from "../componenets/nav";
 
 export default function IdiomsPage() {
   const [idioms, setIdioms] = useState<{ text: string; meaning: string }[]>([]);
@@ -51,12 +52,15 @@ export default function IdiomsPage() {
   };
 
   return (
-    <PhraseList
-      title="Idioms"
-      items={idioms}
-      onAdd={addPhrase}
-      onEdit={editPhrase}
-      onRemove={removePhrase}
-    />
+    <>
+      <Nav />
+      <PhraseList
+        title="Idioms"
+        items={idioms}
+        onAdd={addPhrase}
+        onEdit={editPhrase}
+        onRemove={removePhrase}
+      />
+    </>
   );
 }

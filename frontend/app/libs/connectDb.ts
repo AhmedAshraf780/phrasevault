@@ -5,8 +5,8 @@ const MONGO_URI = process.env.MONGO_URI as string;
 async function dbConnect() {
   mongoose
     .connect(MONGO_URI)
-    .then(() => alert("db connected successfully"))
-    .catch(() => alert("failed to connect"));
+    .then(() => console.log("db connected successfully"))
+    .catch(() => console.log("failed to connect"));
 }
 
 export default dbConnect;

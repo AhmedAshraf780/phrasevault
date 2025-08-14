@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import dbConnect from "@/app/libs/connectDb";
-import User from "../models/users";
+import User from "@/app/models/users";
 
 interface DecodedToken {
   userId: string;

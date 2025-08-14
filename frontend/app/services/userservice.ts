@@ -1,10 +1,3 @@
-type userdata = {
-  name: string;
-  email: string;
-};
-
-const BASE_URL = "/api";
-
 export const userservice = {
   tokenExists() {
     if (typeof window !== "undefined") {
@@ -16,7 +9,7 @@ export const userservice = {
   async getUserData() {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch(`${BASE_URL}/`, {
+      const res = await fetch(`/api`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +26,7 @@ export const userservice = {
 
   async signUpUser(name: string, email: string, password: string) {
     try {
-      const res = await fetch(`${BASE_URL}/signup`, {
+      const res = await fetch(`api/signup/function`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -53,8 +46,7 @@ export const userservice = {
 
   async logInUser(email: string, password: string) {
     try {
-      alert("um in loginuser");
-      const res = await fetch(`${BASE_URL}/login`, {
+      const res = await fetch(`/api/login/function`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -83,7 +75,7 @@ export const userservice = {
   async getPhrases() {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch(`${BASE_URL}/phrases`, {
+      const res = await fetch(`/api/phrases/function`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -101,7 +93,7 @@ export const userservice = {
   async addPhrase(text: string, meaning: string) {
     try {
       const token = localStorage.getItem("token");
-      await fetch(`${BASE_URL}/phrases`, {
+      await fetch(`/api/phrases/function`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -117,7 +109,7 @@ export const userservice = {
   async updatePhrases(phrases: { text: string; meaning: string }[]) {
     try {
       const token = localStorage.getItem("token") || "";
-      await fetch(`${BASE_URL}/phrases`, {
+      await fetch(`/api/phrases/function`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +126,7 @@ export const userservice = {
   async getPhrasals() {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch(`${BASE_URL}/phrasals`, {
+      const res = await fetch(`/api/phrasalverbs/function`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +142,7 @@ export const userservice = {
   async addPhrasal(text: string, meaning: string) {
     try {
       const token = localStorage.getItem("token") || "";
-      await fetch(`${BASE_URL}/phrasals`, {
+      await fetch(`/api/phrasalverbs/function`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -166,7 +158,7 @@ export const userservice = {
   async updatePhrasals(phrasals: { text: string; meaning: string }[]) {
     try {
       const token = localStorage.getItem("token") || "";
-      await fetch(`${BASE_URL}/phrasals`, {
+      await fetch(`/api/phrasalverbs/function`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -183,7 +175,7 @@ export const userservice = {
   async getIdioms() {
     try {
       const token = localStorage.getItem("token") || "";
-      const res = await fetch(`${BASE_URL}/idioms`, {
+      const res = await fetch(`/api/idioms/function`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -199,7 +191,7 @@ export const userservice = {
   async addIdiom(text: string, meaning: string) {
     try {
       const token = localStorage.getItem("token") || "";
-      await fetch(`${BASE_URL}/idioms`, {
+      await fetch(`/api/idioms/function`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +207,7 @@ export const userservice = {
   async updateIdioms(idioms: { text: string; meaning: string }[]) {
     try {
       const token = localStorage.getItem("token") || "";
-      await fetch(`${BASE_URL}/idioms`, {
+      await fetch(`/api/idioms/function`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

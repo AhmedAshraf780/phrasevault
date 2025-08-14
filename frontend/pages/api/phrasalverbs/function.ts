@@ -1,7 +1,8 @@
+// pages/api/phrasals.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import dbConnect from "@/app/libs/connectDb";
-import User from "../models/users";
+import User from "@/app/models/users";
 
 interface DecodedToken {
   userId: string;
@@ -18,6 +19,7 @@ export default async function handler(
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
+
   const token = authHeader.slice(7);
 
   try {
@@ -31,9 +33,9 @@ export default async function handler(
       if (!user) {
         return res
           .status(401)
-          .json({ success: false, message: "User not found" });
+          .json({ success: false, message: "User does not exist" });
       }
-      return res.status(200).json({ phrases: user.phrases || [] });
+      return res.status(200).json({ phrasals: user.phrasalVerbs || [] });
     }
 
     if (req.method === "POST") {
@@ -51,26 +53,32 @@ export default async function handler(
           .json({ success: false, message: "User not found" });
       }
 
-      user.phrases.push({ text, meaning });
+      user.phrasalVerbs.push({ text, meaning });
       await user.save();
 
-      return res
-        .status(200)
-        .json({ success: true, message: `Phrase added: ${text}` });
+      return res.status(200).json({
+        success: true,
+        message: `Phrasal verb added: ${text}`,
+      });
     }
 
     if (req.method === "PUT") {
-      const { phrases } = req.body;
-      if (!Array.isArray(phrases)) {
+      const { phrasals } = req.body;
+      if (!Array.isArray(phrasals)) {
         return res
           .status(400)
-          .json({ success: false, message: "Phrases must be an array" });
+          .json({ success: false, message: "Phrasals must be an array" });
       }
 
-      await User.findByIdAndUpdate(decoded.userId, { phrases }, { new: true });
-      return res
-        .status(200)
-        .json({ success: true, message: "Phrases updated successfully" });
+      await User.findByIdAndUpdate(
+        decoded.userId,
+        { phrasalVerbs: phrasals },
+        { new: true }
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Phrasals updated successfully",
+      });
     }
 
     return res

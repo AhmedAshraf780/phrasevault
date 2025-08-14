@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import PhraseList from "../componenets/PhraseList";
 import { userservice } from "../services/userservice";
+import Nav from "../componenets/nav";
 
 export default function PhrasesPage() {
   const [phrases, setPhrases] = useState<{ text: string; meaning: string }[]>(
@@ -53,12 +54,15 @@ export default function PhrasesPage() {
   };
 
   return (
-    <PhraseList
-      title="Phrases"
-      items={phrases}
-      onAdd={addPhrase}
-      onEdit={editPhrase}
-      onRemove={removePhrase}
-    />
+    <>
+      <Nav />
+      <PhraseList
+        title="Phrases"
+        items={phrases}
+        onAdd={addPhrase}
+        onEdit={editPhrase}
+        onRemove={removePhrase}
+      />
+    </>
   );
 }
