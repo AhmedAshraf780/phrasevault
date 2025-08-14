@@ -15,12 +15,9 @@ export default function SignupPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data: any = await userservice.getUserData();
-      if (data.success) {
-        setUserData(data);
+      const existed = await userservice.isUserExisted();
+      if (existed) {
         router.push("/");
-      } else {
-        router.push("/login");
       }
     };
     fetchData();

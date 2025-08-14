@@ -7,28 +7,22 @@ import { userservice } from "../services/userservice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import type { UserResponse } from "../services/userservice";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState({ isErr: false, message: "" });
-  const [userData, setUserData] = useState<UserResponse | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       const existed = await userservice.isUserExisted();
-      console.log("existed", existed);
       if (existed) {
         router.push("/");
-      } else {
-        router.push("/login");
       }
     };
     fetchData();
-    router.push("/signup");
-  }, [router]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
