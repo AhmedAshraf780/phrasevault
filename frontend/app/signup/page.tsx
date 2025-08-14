@@ -20,7 +20,7 @@ export default function SignupPage() {
         setUserData(data);
         router.push("/");
       } else {
-        router.push("/signup");
+        router.push("/login");
       }
     };
     fetchData();
