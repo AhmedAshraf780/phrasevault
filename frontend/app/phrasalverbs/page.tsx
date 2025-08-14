@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import PhraseList from "../componenets/PhraseList";
+import PhraseList from "../components/PhraseList";
 import { userservice } from "../services/userservice";
-import Nav from "../componenets/nav";
+import Nav from "../components/nav";
 
 export default function PhrasalsPage() {
   const [phrasals, setPhrasals] = useState<{ text: string; meaning: string }[]>(

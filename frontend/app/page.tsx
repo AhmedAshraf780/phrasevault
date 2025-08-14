@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Nav from "./componenets/nav";
+import Nav from "./components/nav";
 import { useRouter } from "next/navigation";
 import { userservice } from "./services/userservice";
 
