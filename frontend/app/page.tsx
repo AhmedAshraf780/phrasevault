@@ -18,7 +18,7 @@ export default function Home() {
     const fetchData = async () => {
       const data: UserResponse = await userservice.getUserData();
       if (!data.success) {
-        router.push("/signup");
+        router.push("/login");
       } else {
         setUserData(data);
         router.push("/");
